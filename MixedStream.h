@@ -1,17 +1,19 @@
 #ifndef MIXEDSTREAM_H
 #define MIXEDSTREAM_H
 
+#include <QAudioFormat>
 #include <QIODevice>
 #include <QList>
 
+using Range = std::numeric_limits<qint16>;
+
 class MixedStream : public QIODevice
 {
-	const int CHANNELS = 16;
-
 	public:
 		MixedStream();
 
 		void openStream(const QString &fileName);
+		void setFormat(const QAudioFormat &format);
 
 		// QIODevice interface
 	protected:
@@ -19,7 +21,10 @@ class MixedStream : public QIODevice
 		qint64 writeData(const char *data, qint64 len);
 
 	private:
+		qint16 mix(qint32 sample1, qint32 sample2);
+
 		QList<QIODevice *> m_streams;
+		QAudioFormat m_format;
 };
 
 #endif // MIXEDSTREAM_H

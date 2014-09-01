@@ -5,9 +5,11 @@ SOURCES += \
     main.cpp \
     SoundHandler.cpp \
     Logic.cpp \
-    MixedStream.cpp
+    MixedStream.cpp \
+    DecodingStream.cpp
 
 HEADERS += \
     SoundHandler.h \
     Logic.h \
-    MixedStream.h
+    MixedStream.h \
+    DecodingStream.h

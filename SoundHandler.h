@@ -14,7 +14,7 @@ class SoundHandler
 		void playSound(const QString &fileName);
 
 	private:
-		QAudioOutput m_output;
+		QAudioOutput *m_output;
 
 		MixedStream m_stream;
 };
