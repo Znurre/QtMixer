@@ -4,35 +4,28 @@
 #include <QAudioDecoder>
 #include <QBuffer>
 
-#include "MixedStream.h"
-#include "DecodingStream.h"
+#include "QMixerStream.h"
+#include "QAudioDecoderStream.h"
 
-MixedStream::MixedStream()
+QMixerStream::QMixerStream(const QAudioFormat &format)
+	: m_format(format)
 {
 
 }
 
-void MixedStream::openStream(const QString &fileName)
+void QMixerStream::openStream(QIODevice *device)
 {
-	DecodingStream *stream = new DecodingStream(fileName, m_format);
-	stream->open(QIODevice::ReadOnly);
-
-	m_streams << stream;
+	m_streams << new QAudioDecoderStream(device, m_format);
 }
 
-void MixedStream::setFormat(const QAudioFormat &format)
-{
-	m_format = format;
-}
-
-qint64 MixedStream::readData(char *data, qint64 maxlen)
+qint64 QMixerStream::readData(char *data, qint64 maxlen)
 {
 	memset(data, 0, maxlen);
 
 	const qint16 depth = sizeof(qint16);
 	const qint16 samples = maxlen / depth;
 
-	QList<QIODevice *> streams = m_streams;
+	const QList<QIODevice *> streams = m_streams;
 
 	for (QIODevice *stream : streams)
 	{
@@ -58,7 +51,7 @@ qint64 MixedStream::readData(char *data, qint64 maxlen)
 	return maxlen;
 }
 
-qint64 MixedStream::writeData(const char *data, qint64 len)
+qint64 QMixerStream::writeData(const char *data, qint64 len)
 {
 	Q_UNUSED(data);
 	Q_UNUSED(len);
@@ -66,7 +59,7 @@ qint64 MixedStream::writeData(const char *data, qint64 len)
 	return 0;
 }
 
-qint16 MixedStream::mix(qint32 sample1, qint32 sample2)
+qint16 QMixerStream::mix(qint32 sample1, qint32 sample2)
 {
 	const qint32 result = sample1 + sample2;
 
