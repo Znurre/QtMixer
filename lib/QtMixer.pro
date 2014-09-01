@@ -1,6 +1,7 @@
 CONFIG += c++11
 QT += multimedia
 TEMPLATE = lib
+DEFINES += QTMIXER_LIBRARY
 
 SOURCES += \
     QAudioDecoderStream.cpp \
@@ -9,4 +10,5 @@ SOURCES += \
 HEADERS += \
     QAudioDecoderStream.h \
     QMixerStream.h \
-    QtMixer
+	QMixerStream \
+    QtMixer_export.h

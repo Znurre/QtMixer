@@ -6,7 +6,9 @@
 #include <QAudioDecoder>
 #include <QFile>
 
-class QAudioDecoderStream : public QIODevice
+#include "QtMixer_export.h"
+
+class QTMIXER_EXPORT QAudioDecoderStream : public QIODevice
 {
 	public:
 		QAudioDecoderStream(QIODevice *device, const QAudioFormat &format);

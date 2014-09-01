@@ -10,7 +10,7 @@
 QMixerStream::QMixerStream(const QAudioFormat &format)
 	: m_format(format)
 {
-
+	setOpenMode(QIODevice::ReadOnly);
 }
 
 void QMixerStream::openStream(QIODevice *device)

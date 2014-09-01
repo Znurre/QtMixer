@@ -3,10 +3,13 @@
 
 #include <QAudioFormat>
 #include <QList>
+#include <QIODevice>
+
+#include "QtMixer_export.h"
 
 typedef std::numeric_limits<qint16> Range;
 
-class QMixerStream : public QIODevice
+class QTMIXER_EXPORT QMixerStream : public QIODevice
 {
 	public:
 		QMixerStream(const QAudioFormat &format);
@@ -14,8 +17,8 @@ class QMixerStream : public QIODevice
 		void openStream(QIODevice *device);
 
 	protected:
-		qint64 readData(char *data, qint64 maxlen);
-		qint64 writeData(const char *data, qint64 len);
+		qint64 readData(char *data, qint64 maxlen) override;
+		qint64 writeData(const char *data, qint64 len) override;
 
 	private:
 		qint16 mix(qint32 sample1, qint32 sample2);

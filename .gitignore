@@ -28,4 +28,4 @@ Makefile*
 
 *.autosave
 
-MixerTest
+example/example
