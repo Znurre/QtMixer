@@ -20,7 +20,9 @@ int main(int argc, char **argv)
 
 	if (file.open(QIODevice::ReadOnly))
 	{
-		stream.openStream(&file);
+		QMixerStreamHandle handle = stream.openEncodedStream(&file);
+
+		Q_UNUSED(handle);
 	}
 
 	return application.exec();

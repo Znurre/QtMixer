@@ -1,19 +1,23 @@
 #ifndef QAUDIODECODERSTREAM_H
 #define QAUDIODECODERSTREAM_H
 
-#include <QIODevice>
 #include <QBuffer>
 #include <QAudioDecoder>
-#include <QFile>
 
-#include "QtMixer_export.h"
+#include "QAbstractMixerStream.h"
 
-class QTMIXER_EXPORT QAudioDecoderStream : public QIODevice
+class QAudioDecoderStream : public QAbstractMixerStream
 {
 	public:
 		QAudioDecoderStream(QIODevice *device, const QAudioFormat &format);
 
 		bool atEnd() const override;
+
+		void play() override;
+		void pause() override;
+		void stop() override;
+
+		QtMixer::State state() const override;
 
 	protected:
 		qint64 readData(char *data, qint64 maxlen) override;
@@ -27,6 +31,7 @@ class QTMIXER_EXPORT QAudioDecoderStream : public QIODevice
 		QByteArray m_data;
 		QAudioDecoder m_decoder;
 
+		QtMixer::State m_state;
 };
 
 #endif // QAUDIODECODERSTREAM_H

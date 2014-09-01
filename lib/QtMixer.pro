@@ -5,10 +5,15 @@ DEFINES += QTMIXER_LIBRARY
 
 SOURCES += \
     QAudioDecoderStream.cpp \
-    QMixerStream.cpp
+    QMixerStream.cpp \
+    QMixerStreamHandle.cpp \
+    QMixerWrapperStream.cpp
 
 HEADERS += \
     QAudioDecoderStream.h \
     QMixerStream.h \
 	QMixerStream \
-    QtMixer_export.h
+    QMixerStreamHandle.h \
+    QMixerWrapperStream.h \
+    QAbstractMixerStream.h \
+    QtMixer.h

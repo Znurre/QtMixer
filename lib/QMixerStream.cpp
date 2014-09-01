@@ -6,6 +6,9 @@
 
 #include "QMixerStream.h"
 #include "QAudioDecoderStream.h"
+#include "QMixerWrapperStream.h"
+#include "QMixerStreamHandle.h"
+#include "QAbstractMixerStream.h"
 
 QMixerStream::QMixerStream(const QAudioFormat &format)
 	: m_format(format)
@@ -13,9 +16,39 @@ QMixerStream::QMixerStream(const QAudioFormat &format)
 	setOpenMode(QIODevice::ReadOnly);
 }
 
-void QMixerStream::openStream(QIODevice *device)
+QMixerStreamHandle QMixerStream::openEncodedStream(QIODevice *device)
 {
-	m_streams << new QAudioDecoderStream(device, m_format);
+	QAudioDecoderStream *stream = new QAudioDecoderStream(device, m_format);
+	QMixerStreamHandle handle(stream);
+
+	m_streams << stream;
+
+	connect(stream, &QAbstractMixerStream::stateChanged, this, &QMixerStream::stateChanged);
+
+	return handle;
+}
+
+QMixerStreamHandle QMixerStream::openRawStream(QIODevice *device)
+{
+	QMixerWrapperStream *stream = new QMixerWrapperStream(device);
+	QMixerStreamHandle handle(stream);
+
+	m_streams << stream;
+
+	connect(stream, &QAbstractMixerStream::stateChanged, this, &QMixerStream::stateChanged);
+
+	return handle;
+}
+
+void QMixerStream::closeStream(const QMixerStreamHandle &handle)
+{
+	QAbstractMixerStream *stream = handle.m_stream;
+
+	if (stream)
+	{
+		stream->removeFrom(m_streams);
+		stream->deleteLater();
+	}
 }
 
 qint64 QMixerStream::readData(char *data, qint64 maxlen)
@@ -25,9 +58,9 @@ qint64 QMixerStream::readData(char *data, qint64 maxlen)
 	const qint16 depth = sizeof(qint16);
 	const qint16 samples = maxlen / depth;
 
-	const QList<QIODevice *> streams = m_streams;
+	const QList<QAbstractMixerStream *> streams = m_streams;
 
-	for (QIODevice *stream : streams)
+	for (QAbstractMixerStream *stream : streams)
 	{
 		qint16 *cursor = (qint16 *)data;
 		qint16 sample;
@@ -42,9 +75,7 @@ qint64 QMixerStream::readData(char *data, qint64 maxlen)
 
 		if (stream->atEnd())
 		{
-			m_streams.removeOne(stream);
-
-			delete stream;
+			stream->stop();
 		}
 	}
 
