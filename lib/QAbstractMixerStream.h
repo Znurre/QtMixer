@@ -19,6 +19,9 @@ class QAbstractMixerStream : public QIODevice
 
 		virtual QtMixer::State state() const = 0;
 
+		virtual int loops() const = 0;
+		virtual void setLoops(int loops) = 0;
+
 	private:
 		void removeFrom(QList<QAbstractMixerStream *> streams)
 		{

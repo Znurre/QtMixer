@@ -11,9 +11,12 @@ SOURCES += \
 
 HEADERS += \
     QAudioDecoderStream.h \
-    QMixerStream.h \
-	QMixerStream \
+	QMixerStream.h \
     QMixerStreamHandle.h \
     QMixerWrapperStream.h \
     QAbstractMixerStream.h \
-    QtMixer.h
+	QtMixer.h
+
+OTHER_FILES += \
+	QMixerStream \
+	QMixerStreamHandle

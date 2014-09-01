@@ -7,6 +7,8 @@ QAudioDecoderStream::QAudioDecoderStream(QIODevice *device, const QAudioFormat &
 	: m_input(&m_data)
 	, m_output(&m_data)
 	, m_state(QtMixer::Stopped)
+	, m_loops(0)
+	, m_remainingLoops(0)
 {
 	setOpenMode(QIODevice::ReadOnly);
 
@@ -27,6 +29,25 @@ qint64 QAudioDecoderStream::readData(char *data, qint64 maxlen)
 	if (m_state == QtMixer::Playing)
 	{
 		m_output.read(data, maxlen);
+
+		if (m_output.size() &&
+			m_output.atEnd())
+		{
+			if (m_loops != 0)
+			{
+				if (m_loops > 0)
+				{
+					if ((--m_remainingLoops) > 0)
+					{
+						rewind();
+					}
+				}
+				else
+				{
+					rewind();
+				}
+			}
+		}
 	}
 
 	return maxlen;
@@ -38,6 +59,13 @@ qint64 QAudioDecoderStream::writeData(const char *data, qint64 len)
 	Q_UNUSED(len);
 
 	return 0;
+}
+
+void QAudioDecoderStream::rewind()
+{
+	qDebug() << "Rewinding";
+
+	m_output.seek(0);
 }
 
 void QAudioDecoderStream::bufferReady()
@@ -52,7 +80,7 @@ void QAudioDecoderStream::bufferReady()
 
 bool QAudioDecoderStream::atEnd() const
 {
-	return m_output.bytesAvailable()
+	return m_output.size()
 		&& m_output.atEnd();
 }
 
@@ -73,7 +101,9 @@ void QAudioDecoderStream::pause()
 void QAudioDecoderStream::stop()
 {
 	m_state = QtMixer::Stopped;
-	m_output.seek(0);
+	m_remainingLoops = m_loops;
+
+	rewind();
 
 	emit stateChanged(this, m_state);
 }
@@ -81,4 +111,15 @@ void QAudioDecoderStream::stop()
 QtMixer::State QAudioDecoderStream::state() const
 {
 	return m_state;
+}
+
+int QAudioDecoderStream::loops() const
+{
+	return m_loops;
+}
+
+void QAudioDecoderStream::setLoops(int loops)
+{
+	m_loops = loops;
+	m_remainingLoops = loops;
 }

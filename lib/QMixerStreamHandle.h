@@ -19,6 +19,13 @@ class QTMIXER_EXPORT QMixerStreamHandle
 		void pause();
 		void stop();
 
+		QtMixer::State state() const;
+
+		int loops() const;
+		void setLoops(int loops);
+
+		bool operator ==(const QMixerStreamHandle &other) const;
+
 	private:
 		QMixerStreamHandle(QAbstractMixerStream *stream);
 

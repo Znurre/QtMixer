@@ -5,10 +5,16 @@
 TEMPLATE = app
 TARGET = example
 INCLUDEPATH += . ../lib
-QT += multimedia
+QT += multimedia widgets
 CONFIG += c++11
 
 # Input
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    MainWindow.cpp \
+    SampleListEntry.cpp
 
 LIBS += -L../lib -lQtMixer
+
+HEADERS += \
+    MainWindow.h \
+    SampleListEntry.h
