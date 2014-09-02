@@ -22,14 +22,20 @@ class QAbstractMixerStream : public QIODevice
 		virtual int loops() const = 0;
 		virtual void setLoops(int loops) = 0;
 
+		virtual int position() const= 0;
+		virtual void setPosition(int position) = 0;
+
+		virtual int length() = 0;
+
 	private:
-		void removeFrom(QList<QAbstractMixerStream *> streams)
+		void removeFrom(QList<QAbstractMixerStream *> &streams)
 		{
 			streams.removeAll(this);
 		}
 
 	signals:
 		void stateChanged(QMixerStreamHandle handle, QtMixer::State state);
+		void decodingFinished(QMixerStreamHandle handle);
 };
 
 #endif // QABSTRACTMIXERSTREAM_H

@@ -1,4 +1,3 @@
-#include <QFile>
 #include <QDebug>
 #include <QByteArray>
 #include <QAudioDecoder>
@@ -6,36 +5,25 @@
 
 #include "QMixerStream.h"
 #include "QAudioDecoderStream.h"
-#include "QMixerWrapperStream.h"
 #include "QMixerStreamHandle.h"
 #include "QAbstractMixerStream.h"
+#include "QMixerStream_p.h"
 
 QMixerStream::QMixerStream(const QAudioFormat &format)
-	: m_format(format)
+	: d_ptr(new QMixerStreamPrivate(format))
 {
 	setOpenMode(QIODevice::ReadOnly);
 }
 
-QMixerStreamHandle QMixerStream::openEncodedStream(QIODevice *device)
+QMixerStreamHandle QMixerStream::openStream(QIODevice *device)
 {
-	QAudioDecoderStream *stream = new QAudioDecoderStream(device, m_format);
+	QAudioDecoderStream *stream = new QAudioDecoderStream(device, d_ptr->m_format);
 	QMixerStreamHandle handle(stream);
 
-	m_streams << stream;
+	d_ptr->m_streams << stream;
 
 	connect(stream, &QAbstractMixerStream::stateChanged, this, &QMixerStream::stateChanged);
-
-	return handle;
-}
-
-QMixerStreamHandle QMixerStream::openRawStream(QIODevice *device)
-{
-	QMixerWrapperStream *stream = new QMixerWrapperStream(device);
-	QMixerStreamHandle handle(stream);
-
-	m_streams << stream;
-
-	connect(stream, &QAbstractMixerStream::stateChanged, this, &QMixerStream::stateChanged);
+	connect(stream, &QAbstractMixerStream::decodingFinished, this, &QMixerStream::decodingFinished);
 
 	return handle;
 }
@@ -46,7 +34,7 @@ void QMixerStream::closeStream(const QMixerStreamHandle &handle)
 
 	if (stream)
 	{
-		stream->removeFrom(m_streams);
+		stream->removeFrom(d_ptr->m_streams);
 		stream->deleteLater();
 	}
 }
@@ -58,7 +46,7 @@ qint64 QMixerStream::readData(char *data, qint64 maxlen)
 	const qint16 depth = sizeof(qint16);
 	const qint16 samples = maxlen / depth;
 
-	const QList<QAbstractMixerStream *> streams = m_streams;
+	const QList<QAbstractMixerStream *> streams = d_ptr->m_streams;
 
 	for (QAbstractMixerStream *stream : streams)
 	{

@@ -5,14 +5,12 @@
 
 class QAbstractMixerStream;
 class QAudioDecoderStream;
-class QMixerWrapperStream;
 class QMixerStream;
 
 class QTMIXER_EXPORT QMixerStreamHandle
 {
 	friend class QMixerStream;
 	friend class QAudioDecoderStream;
-	friend class QMixerWrapperStream;
 
 	public:
 		void play();
@@ -23,6 +21,11 @@ class QTMIXER_EXPORT QMixerStreamHandle
 
 		int loops() const;
 		void setLoops(int loops);
+
+		int position() const;
+		void setPosition(int position);
+
+		int length() const;
 
 		bool operator ==(const QMixerStreamHandle &other) const;
 

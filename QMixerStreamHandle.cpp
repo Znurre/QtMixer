@@ -37,6 +37,21 @@ void QMixerStreamHandle::setLoops(int loops)
 	m_stream->setLoops(loops);
 }
 
+int QMixerStreamHandle::position() const
+{
+	return m_stream->position();
+}
+
+void QMixerStreamHandle::setPosition(int position)
+{
+	m_stream->setPosition(position);
+}
+
+int QMixerStreamHandle::length() const
+{
+	return m_stream->length();
+}
+
 bool QMixerStreamHandle::operator ==(const QMixerStreamHandle &other) const
 {
 	return other.m_stream == m_stream;

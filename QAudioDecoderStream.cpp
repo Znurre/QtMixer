@@ -6,6 +6,7 @@
 QAudioDecoderStream::QAudioDecoderStream(QIODevice *device, const QAudioFormat &format)
 	: m_input(&m_data)
 	, m_output(&m_data)
+	, m_format(format)
 	, m_state(QtMixer::Stopped)
 	, m_loops(0)
 	, m_remainingLoops(0)
@@ -20,6 +21,7 @@ QAudioDecoderStream::QAudioDecoderStream(QIODevice *device, const QAudioFormat &
 	m_decoder.start();
 
 	connect(&m_decoder, &QAudioDecoder::bufferReady, this, &QAudioDecoderStream::bufferReady);
+	connect(&m_decoder, &QAudioDecoder::finished, this, &QAudioDecoderStream::finished);
 }
 
 qint64 QAudioDecoderStream::readData(char *data, qint64 maxlen)
@@ -63,8 +65,6 @@ qint64 QAudioDecoderStream::writeData(const char *data, qint64 len)
 
 void QAudioDecoderStream::rewind()
 {
-	qDebug() << "Rewinding";
-
 	m_output.seek(0);
 }
 
@@ -76,6 +76,11 @@ void QAudioDecoderStream::bufferReady()
 	const char *data = buffer.data<char>();
 
 	m_input.write(data, length);
+}
+
+void QAudioDecoderStream::finished()
+{
+	emit decodingFinished(this);
 }
 
 bool QAudioDecoderStream::atEnd() const
@@ -122,4 +127,30 @@ void QAudioDecoderStream::setLoops(int loops)
 {
 	m_loops = loops;
 	m_remainingLoops = loops;
+}
+
+int QAudioDecoderStream::position() const
+{
+	return m_output.pos()
+		/ (m_format.sampleSize() / 8)
+		/ (m_format.sampleRate() / 1000)
+		/ (m_format.channelCount());
+}
+
+void QAudioDecoderStream::setPosition(int position)
+{
+	const int target = position
+		* (m_format.sampleSize() / 8)
+		* (m_format.sampleRate() / 1000)
+		* (m_format.channelCount());
+
+	m_output.seek(target);
+}
+
+int QAudioDecoderStream::length()
+{
+	return m_output.size()
+		/ (m_format.sampleSize() / 8)
+		/ (m_format.sampleRate() / 1000)
+		/ (m_format.channelCount());
 }

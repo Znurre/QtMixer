@@ -7,15 +7,15 @@ SOURCES += \
     QAudioDecoderStream.cpp \
     QMixerStream.cpp \
     QMixerStreamHandle.cpp \
-    QMixerWrapperStream.cpp
+    QMixerStream_p.cpp
 
 HEADERS += \
     QAudioDecoderStream.h \
 	QMixerStream.h \
     QMixerStreamHandle.h \
-    QMixerWrapperStream.h \
     QAbstractMixerStream.h \
-	QtMixer.h
+	QtMixer.h \
+    QMixerStream_p.h
 
 OTHER_FILES += \
 	QMixerStream \

@@ -3,15 +3,13 @@
 
 #include <QIODevice>
 #include <QAudioFormat>
-#include <QList>
-#include <QAudio>
 
 #include "QtMixer.h"
 #include "QMixerStreamHandle.h"
 
 typedef std::numeric_limits<qint16> Range;
 
-class QAbstractMixerStream;
+class QMixerStreamPrivate;
 
 class QTMIXER_EXPORT QMixerStream : public QIODevice
 {
@@ -20,8 +18,7 @@ class QTMIXER_EXPORT QMixerStream : public QIODevice
 	public:
 		QMixerStream(const QAudioFormat &format);
 
-		QMixerStreamHandle openEncodedStream(QIODevice *device);
-		QMixerStreamHandle openRawStream(QIODevice *device);
+		QMixerStreamHandle openStream(QIODevice *device);
 
 		void closeStream(const QMixerStreamHandle &handle);
 
@@ -32,11 +29,11 @@ class QTMIXER_EXPORT QMixerStream : public QIODevice
 	private:
 		qint16 mix(qint32 sample1, qint32 sample2);
 
-		QList<QAbstractMixerStream *> m_streams;
-		QAudioFormat m_format;
+		QMixerStreamPrivate *d_ptr;
 
 	signals:
 		void stateChanged(QMixerStreamHandle handle, QtMixer::State state);
+		void decodingFinished(QMixerStreamHandle handle);
 };
 
 #endif // QMIXERSTREAM_H

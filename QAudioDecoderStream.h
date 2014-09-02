@@ -3,6 +3,7 @@
 
 #include <QBuffer>
 #include <QAudioDecoder>
+#include <QAudioFormat>
 
 #include "QAbstractMixerStream.h"
 
@@ -22,6 +23,11 @@ class QAudioDecoderStream : public QAbstractMixerStream
 		int loops() const override;
 		void setLoops(int loops) override;
 
+		int position() const override;
+		void setPosition(int position) override;
+
+		int length() override;
+
 	protected:
 		qint64 readData(char *data, qint64 maxlen) override;
 		qint64 writeData(const char *data, qint64 len) override;
@@ -29,11 +35,13 @@ class QAudioDecoderStream : public QAbstractMixerStream
 	private:
 		void rewind();
 		void bufferReady();
+		void finished();
 
 		QBuffer m_input;
 		QBuffer m_output;
 		QByteArray m_data;
 		QAudioDecoder m_decoder;
+		QAudioFormat m_format;
 
 		QtMixer::State m_state;
 
