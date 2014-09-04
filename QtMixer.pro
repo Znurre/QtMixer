@@ -1,4 +1,4 @@
-CONFIG += c++11 plugin
+CONFIG += c++11
 QT += multimedia
 TEMPLATE = lib
 DEFINES += QTMIXER_LIBRARY
@@ -10,26 +10,31 @@ SOURCES += \
 	QMixerStreamHandle.cpp \
 	QMixerStream_p.cpp
 
-HEADERS += \
-	QAudioDecoderStream.h \
+INSTALL_HEADERS += \
 	QMixerStream.h \
 	QMixerStreamHandle.h \
-	QAbstractMixerStream.h \
 	QtMixer.h \
+	QMixerStream \
+	QMixerStreamHandle
+
+PRIVATE_HEADERS += \
+	QAudioDecoderStream.h \
+	QAbstractMixerStream.h \
 	QMixerStream_p.h
 
+HEADERS = \
+	$${INSTALL_HEADERS} \
+	$${PRIVATE_HEADERS}
+
 OTHER_FILES += \
-	QMixerStream \
-	QMixerStreamHandle \
 	mixer.prf
 
-headers.files = QMixerStream.h QMixerStream QMixerStreamHandle.h QMixerStreamHandle	QtMixer.h
+headers.files = $${INSTALL_HEADERS}
 headers.path = $$[QT_INSTALL_HEADERS]/QtMixer
 
-libs.files = libQtMixer.so
-libs.path = $$[QT_INSTALL_LIBS]
+target.path = $$[QT_INSTALL_LIBS]
 
 features.files = mixer.prf
 features.path = $$[QMAKE_MKSPECS]/features
 
-INSTALLS += headers libs features
+INSTALLS += headers target features
