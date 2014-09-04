@@ -10,16 +10,30 @@ For use with QAudioOutput, using QAudioDecoder for decoding of input files.
 Installation
 -----------
 
+Linux:
+
 ```
 qmake
 make
 sudo make install
 ```
 
+Windows (MSVC):
+
+QtMixer can be compiled with MinGW too, but you won't get any sound.  
+This is because QAudioDecoder relies on WMF on Windows (http://qt-project.org/wiki/Qt_Multimedia_Backends), which requires compiling with MSVC.
+
+```
+qmake
+nmake
+nmake install
+```
+
 Simple usage
 -----------
 
 ```
+QT += multimedia
 CONFIG += mixer
 ```
 
