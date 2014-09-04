@@ -5,25 +5,25 @@ DEFINES += QTMIXER_LIBRARY
 TARGET = $$qtLibraryTarget(QtMixer)
 
 SOURCES += \
-    QAudioDecoderStream.cpp \
-    QMixerStream.cpp \
-    QMixerStreamHandle.cpp \
-    QMixerStream_p.cpp
+	QAudioDecoderStream.cpp \
+	QMixerStream.cpp \
+	QMixerStreamHandle.cpp \
+	QMixerStream_p.cpp
 
 HEADERS += \
-    QAudioDecoderStream.h \
+	QAudioDecoderStream.h \
 	QMixerStream.h \
-    QMixerStreamHandle.h \
-    QAbstractMixerStream.h \
+	QMixerStreamHandle.h \
+	QAbstractMixerStream.h \
 	QtMixer.h \
-    QMixerStream_p.h
+	QMixerStream_p.h
 
 OTHER_FILES += \
 	QMixerStream \
 	QMixerStreamHandle \
-    mixer.prf
+	mixer.prf
 
-headers.files = QMixerStream.h QMixerStream	QMixerStreamHandle.h QMixerStreamHandle	QtMixer.h
+headers.files = QMixerStream.h QMixerStream QMixerStreamHandle.h QMixerStreamHandle	QtMixer.h
 headers.path = $$[QT_INSTALL_HEADERS]/QtMixer
 
 libs.files = libQtMixer.so
