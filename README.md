@@ -10,17 +10,18 @@ For use with QAudioOutput, using QAudioDecoder for decoding of input files.
 Installation
 -----------
 
-Build and copy lib files to /usr/local/lib  
-Copy the following header files to /usr/local/include/QtMixer:  
-
-QMixerStream.h  
-QMixerStream  
-QMixerStreamHandle.h  
-QMixerStreamHandle  
-QtMixer.h  
+```
+qmake
+make
+sudo make install
+```
 
 Simple usage
 -----------
+
+```
+CONFIG += mixer
+```
 
 ```C++
 #include <QMixerStream>
