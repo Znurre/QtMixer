@@ -13,6 +13,8 @@ class QTMIXER_EXPORT QMixerStreamHandle
 	friend class QAudioDecoderStream;
 
 	public:
+		QMixerStreamHandle();
+
 		void play();
 		void pause();
 		void stop();

@@ -15,9 +15,9 @@ QMixerStream::QMixerStream(const QAudioFormat &format)
 	setOpenMode(QIODevice::ReadOnly);
 }
 
-QMixerStreamHandle QMixerStream::openStream(QIODevice *device)
+QMixerStreamHandle QMixerStream::openStream(const QString &fileName)
 {
-	QAudioDecoderStream *stream = new QAudioDecoderStream(device, d_ptr->m_format);
+	QAudioDecoderStream *stream = new QAudioDecoderStream(fileName, d_ptr->m_format);
 	QMixerStreamHandle handle(stream);
 
 	d_ptr->m_streams << stream;

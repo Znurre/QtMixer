@@ -4,13 +4,14 @@
 #include <QBuffer>
 #include <QAudioDecoder>
 #include <QAudioFormat>
+#include <QFile>
 
 #include "QAbstractMixerStream.h"
 
 class QAudioDecoderStream : public QAbstractMixerStream
 {
 	public:
-		QAudioDecoderStream(QIODevice *device, const QAudioFormat &format);
+		QAudioDecoderStream(const QString &fileName, const QAudioFormat &format);
 
 		bool atEnd() const override;
 
@@ -37,6 +38,7 @@ class QAudioDecoderStream : public QAbstractMixerStream
 		void bufferReady();
 		void finished();
 
+		QFile m_file;
 		QBuffer m_input;
 		QBuffer m_output;
 		QByteArray m_data;

@@ -3,6 +3,7 @@ QT += multimedia
 TEMPLATE = lib
 DEFINES += QTMIXER_LIBRARY
 TARGET = $$qtLibraryTarget(QtMixer)
+VER_MAJ = 2
 
 SOURCES += \
 	QAudioDecoderStream.cpp \

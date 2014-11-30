@@ -3,8 +3,9 @@
 #include "QAudioDecoderStream.h"
 #include "QMixerStreamHandle.h"
 
-QAudioDecoderStream::QAudioDecoderStream(QIODevice *device, const QAudioFormat &format)
-	: m_input(&m_data)
+QAudioDecoderStream::QAudioDecoderStream(const QString &fileName, const QAudioFormat &format)
+	: m_file(fileName)
+	, m_input(&m_data)
 	, m_output(&m_data)
 	, m_format(format)
 	, m_state(QtMixer::Stopped)
@@ -17,7 +18,7 @@ QAudioDecoderStream::QAudioDecoderStream(QIODevice *device, const QAudioFormat &
 	m_output.open(QIODevice::ReadOnly);
 
 	m_decoder.setAudioFormat(format);
-	m_decoder.setSourceDevice(device);
+	m_decoder.setSourceDevice(&m_file);
 	m_decoder.start();
 
 	connect(&m_decoder, &QAudioDecoder::bufferReady, this, &QAudioDecoderStream::bufferReady);
