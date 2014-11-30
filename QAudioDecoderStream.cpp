@@ -14,9 +14,14 @@ QAudioDecoderStream::QAudioDecoderStream(const QString &fileName, const QAudioFo
 {
 	setOpenMode(QIODevice::ReadOnly);
 
-	m_input.open(QIODevice::WriteOnly);
-	m_output.open(QIODevice::ReadOnly);
+	const bool valid =
+		m_file.open(QIODevice::ReadOnly) &&
+		m_output.open(QIODevice::ReadOnly) &&
+		m_input.open(QIODevice::WriteOnly);
 
+	Q_ASSERT(valid);
+
+	m_decoder.setNotifyInterval(10);
 	m_decoder.setAudioFormat(format);
 	m_decoder.setSourceDevice(&m_file);
 	m_decoder.start();
