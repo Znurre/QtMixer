@@ -51,19 +51,10 @@ QAudioOutput output(device, audioFormat);
 output.setVolume(0.5);
 output.start(&stream);
 
-QFile musicFile("music.ogg");
-QFile soundFile("sfx.wav");
+QMixerStreamHandle handle1 = stream.openStream("music.ogg");
+handle1.play();
 
-if (musicFile.open(QIODevice::ReadOnly))
-{
-	QMixerStreamHandle handle = stream.openStream(&musicFile);
-	handle.play();
-}
-
-if (soundFile.open(QIODevice::ReadOnly))
-{
-	QMixerStreamHandle handle = stream.openStream(&soundFile);
-	handle.setLoops(5);
-	handle.play();
-}
+QMixerStreamHandle handle2 = stream.openStream("sfx.wav");
+handle2.setLoops(5);
+handle2.play();
 ```
